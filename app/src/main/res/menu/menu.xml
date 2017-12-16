@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/menuTitleMapView">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/satelliteView"
+                    android:title="@string/menusatelliteView" />
+                <item
+                    android:id="@+id/mapView"
+                    android:title="@string/menumapView" />
+                <item
+                    android:id="@+id/terrianView"
+                   android:title="@string/menuterrianView" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/menuTitleMode">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/modeDriving"
+                    android:title="@string/menumodeDriving" />
+                <item
+                    android:id="@+id/modeBicycling"
+                    android:title="@string/menumodeBicycling" />
+                <item
+                    android:id="@+id/modeWalking"
+                    android:title="@string/menumodeWalking" />
+            </group>
+        </menu>
+    </item>
+</menu>

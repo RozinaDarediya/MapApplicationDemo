@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">MapApplication</string>
+    <string name="google_maps_key">AIzaSyAp2M4zPmphKnVOjtdaLt5y5fcZwWL9ofY</string>
+
+    <string name="txt_countinue">Countinue</string>
+    <string name="txt_location_permission_title">Title</string>
+    <string name="txt_location_permission">Give location permission</string>
+
+    <string name="btnMarkerCluster">Map Marker And Cluster</string>
+    <string name="btnMapPath">Map Path On Map Tapping </string>
+    <string name="btnMapPathSearchbar">Search Destination With Multiple Path</string>
+    <string name="btnhospitals">Hospitals</string>
+    <string name="btnRestarents">Restarents</string>
+    <string name="btnSchools">Schools</string>
+    <string name="btnDirections">Directions</string>
+    <string name="tvTotalDistance">Total Distance</string>
+
+     <string name="menusatelliteView">Satellite</string>
+     <string name="menumapView">Normal</string>
+     <string name="menuterrianView">Terrian</string>
+     <string name="menumodeDriving">Driving</string>
+     <string name="menumodeBicycling">Bicycling</string>
+     <string name="menumodeWalking">Walking</string>
+
+     <string name="menuTitleMapView">Map View</string>
+     <string name="menuTitleMode">Mode</string>
+
+    <string-array name="place_type">
+        <item>airport</item>
+        <item>atm</item>
+        <item>bank</item>
+        <item>bus_station</item>
+        <item>church</item>
+        <item>doctor</item>
+        <item>hospital</item>
+        <item>mosque</item>
+        <item>movie_theater</item>
+        <item>hindu_temple</item>
+        <item>restaurant</item>
+    </string-array>
+
+    <string-array name="place_type_name">
+        <item>Airport</item>
+        <item>ATM</item>
+        <item>Bank</item>
+        <item>Bus Station</item>
+        <item>Church</item>
+        <item>Doctor</item>
+        <item>Hospital</item>
+        <item>Mosque</item>
+        <item>Movie Theater</item>
+        <item>Hindu Temple</item>
+        <item>Restaurant</item>
+    </string-array>
+</resources>
