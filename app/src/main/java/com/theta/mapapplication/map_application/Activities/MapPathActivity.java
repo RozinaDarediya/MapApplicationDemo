@@ -1,20 +1,26 @@
 package com.theta.mapapplication.map_application.Activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.theta.mapapplication.R;
 import com.theta.mapapplication.map_application.classes.DirectionsJSONParser;
+import com.theta.mapapplication.map_application.global.Global;
 
 import org.json.JSONObject;
 
@@ -30,19 +36,43 @@ import java.util.List;
 
 public class MapPathActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private LinearLayout linearlayout;
     private GoogleMap mMap;
-    private ArrayList markerPoints= new ArrayList();
+    private ArrayList markerPoints = new ArrayList();
+    private Snackbar snackbar;
 
     private com.google.android.gms.maps.MapFragment mapFragmentPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_path);
 
         init();
+
+        if (!Global.isNetworkAvailable(this)) {
+            snackbar = Snackbar.make(linearlayout, "No internet connection !", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(MapPathActivity.this, MainActivity.class));
+                        }
+                    });
+            snackbar.show();
+        } else {
+            snackbar = Snackbar.make(linearlayout, "Please tap on the map to choose source and destination to draw the route", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            snackbar.dismiss();
+                        }
+                    });
+            snackbar.show();
+        }
     }
 
     private void init() {
+        linearlayout = findViewById(R.id.linearlayout);
         mapFragmentPath = (com.google.android.gms.maps.MapFragment) getFragmentManager().findFragmentById(R.id.mapviewpath);
         mapFragmentPath.getMapAsync(this);
     }
@@ -53,6 +83,7 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
         mMap = googleMap;
         LatLng sydney = new LatLng(-34, 151);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
+        final String city;
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -70,6 +101,9 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
 
                 // Setting the position of the marker
                 options.position(latLng);
+                options.title(latLng.latitude + ":" + latLng.longitude);
+                Log.e("location : ", (latLng.latitude + "," + latLng.longitude));
+
 
                 if (markerPoints.size() == 1) {
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
@@ -78,7 +112,8 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
                 }
 
                 // Add new marker to the Google Map Android API V2
-                mMap.addMarker(options);
+                Marker marker = mMap.addMarker(options);
+                marker.showInfoWindow();  // to show marker title on tap
 
                 // Checks, whether start and end locations are captured
                 if (markerPoints.size() >= 2) {
@@ -98,7 +133,7 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
 
     }
 
-    private class DownloadTask extends AsyncTask<String,String,String>{
+    private class DownloadTask extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... url) {
@@ -120,7 +155,7 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>>{
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
@@ -170,6 +205,7 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
             mMap.addPolyline(lineOptions);
         }
     }
+
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
@@ -186,6 +222,7 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         return url;
     }
+
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;

@@ -1,8 +1,12 @@
 package com.theta.mapapplication.map_application.global;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.theta.mapapplication.AppApplication;
 
 import static com.theta.mapapplication.AppApplication.sharedPref;
 
@@ -19,6 +23,7 @@ public class Global {
         // Destination of route
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
         // Sensor enabled
+        //String sensor = "sensor=false&mode=driving&alternatives=true";
         String sensor = "sensor=false&mode=driving&alternatives=true";
         // Building the parameters to the web service
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
@@ -27,8 +32,22 @@ public class Global {
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         return url;
-    }
+    }//getMapsApiDirectionsUrl
 
+    // Function to check Internet Connectivity
+    public static synchronized boolean isNetworkAvailable(Context context) {
+        boolean isConnected = false;
+        if (context != null) {
+            ConnectivityManager cm =
+                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+        }
+
+        return isConnected;
+    }//isNetworkAvailable
 
 
     // stores string value
@@ -56,7 +75,7 @@ public class Global {
 
     // get string value from SharedPreference
     public static String getPreference(String key, String defValue) {
-        return sharedPref.getString(key, defValue);
+        return AppApplication.sharedPref.getString(key, defValue);
     }
 
     // get string int from SharedPreference

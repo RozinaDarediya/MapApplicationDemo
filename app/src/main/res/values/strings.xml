@@ -13,7 +13,10 @@
     <string name="btnRestarents">Restarents</string>
     <string name="btnSchools">Schools</string>
     <string name="btnDirections">Directions</string>
-    <string name="tvTotalDistance">Total Distance</string>
+    <string name="tvTotalDistance">Distance</string>
+    <string name="tvTotalDuration">Duration</string>
+    <string name="tvMoreInfo">Route Info</string>
+    <string name="tvYourLoc">Your Location</string>
 
      <string name="menusatelliteView">Satellite</string>
      <string name="menumapView">Normal</string>
