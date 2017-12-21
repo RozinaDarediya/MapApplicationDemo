@@ -46,12 +46,13 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class MainActivity extends AppCompatActivity
         implements LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, ActivityCompat.OnRequestPermissionsResultCallback{
+        GoogleApiClient.OnConnectionFailedListener, ActivityCompat.OnRequestPermissionsResultCallback, View.OnClickListener {
 
 
-    Button btnMarkerCluster;
-    Button btnMapPath;
-    Button btnMapPathSearchbar;
+    private Button btnMarkerCluster;
+    private Button btnMapPath;
+    private Button btnMapPathSearchbar;
+    private Button btnStartTripActivity;
 
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
@@ -71,15 +72,16 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         getCurrentLocationData();
-        btnMarkerCluster = findViewById(R.id.btnMarkerCluster);
-        btnMarkerCluster.setOnClickListener(new View.OnClickListener() {
+        init();
+
+        /*btnMarkerCluster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, MarkersAndClusterActivity.class));
             }
         });
 
-        btnMapPath = findViewById(R.id.btnMapPath);
+
         btnMapPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,13 +89,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        btnMapPathSearchbar = findViewById(R.id.btnMapPathSearchbar);
+
         btnMapPathSearchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, MapPathWithSearchbarActivity.class));
             }
-        });
+        });*/
 
         positiveClick = new DialogInterface.OnClickListener() {
             @Override
@@ -107,6 +109,38 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private void init() {
+        btnStartTripActivity = findViewById(R.id.btnStartTripActivity);
+        btnMarkerCluster = findViewById(R.id.btnMarkerCluster);
+        btnMapPath = findViewById(R.id.btnMapPath);
+        btnMapPathSearchbar = findViewById(R.id.btnMapPathSearchbar);
+
+        initViews();
+    }
+
+    private void initViews() {
+        btnStartTripActivity.setOnClickListener(this);
+        btnMarkerCluster.setOnClickListener(this);
+        btnMapPath.setOnClickListener(this);
+        btnMapPathSearchbar.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btnStartTripActivity){
+            startActivity(new Intent(MainActivity.this, StartTripActivity.class));
+        }
+        if (view.getId() == R.id.btnMarkerCluster){
+            startActivity(new Intent(MainActivity.this, MarkersAndClusterActivity.class));
+        }
+        if (view.getId() == R.id.btnMapPath){
+            startActivity(new Intent(MainActivity.this, MapPathActivity.class));
+        }
+        if (view.getId() == R.id.btnMapPathSearchbar){
+            startActivity(new Intent(MainActivity.this, MapPathWithSearchbarActivity.class));
+        }
+
+    }
     public void getCurrentLocationData() {
         if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
@@ -351,6 +385,8 @@ public class MainActivity extends AppCompatActivity
     public void onProviderDisabled(String s) {
 
     }
+
+
 }
     /*Get the API key for Google Places API
 

@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -50,11 +52,13 @@ import com.theta.mapapplication.map_application.model.NearByModel;
 import com.theta.mapapplication.map_application.model.RouteDistanceAndDurationModel;
 import com.theta.mapapplication.map_application.model.RouteInfo;
 import com.theta.mapapplication.map_application.model.RouteStepInfo;
+import com.theta.mapapplication.map_application.webservice.Api;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,14 +97,18 @@ public class MapPathWithSearchbarActivity extends AppCompatActivity implements O
     private SupportMapFragment mapFragment;
     private ClusterManager<NearByModel> mClusterManager;
     private PlaceAutocompleteFragment autocompleteFragment;
+    int PROXIMITY_RADIUS = 10000;
 
-    //-----\
+    //----- related to bottom sheet ------\\
     BottomSheetBehavior behavior;
     RecyclerView recyclerView;
     private RootInfoAdapter mAdapter;
     CoordinatorLayout coordinatorLayout;
 
-    int PROXIMITY_RADIUS = 10000;
+    //Related to socket
+    private Socket mSocket;
+    private Marker socketMarker;
+    private TextView tvStartTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +119,16 @@ public class MapPathWithSearchbarActivity extends AppCompatActivity implements O
                 getFragmentManager().findFragmentById(R.id.place_autocomplete);
 
         init();
+        socket();
 
         if (!Global.isNetworkAvailable(this)) {
             snackbar = Snackbar.make(tvTotalDistance, "No internet connection !", Snackbar.LENGTH_INDEFINITE)
                     .setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            startActivity(new Intent(MapPathWithSearchbarActivity.this, MainActivity.class));
+                            Intent intent = new Intent(MapPathWithSearchbarActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                         }
                     });
             snackbar.show();
@@ -129,6 +140,16 @@ public class MapPathWithSearchbarActivity extends AppCompatActivity implements O
             btnSchools.setOnClickListener(this);
             btnRestarents.setOnClickListener(this);
             tvMoreInfo.setOnClickListener(this);
+        }
+    }
+
+    private void socket() {
+        try {
+            tvStartTrip = findViewById(R.id.tvStartTrip);
+            tvStartTrip.setOnClickListener(this);
+            mSocket = IO.socket(Api.SocketMainUrl);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 
@@ -279,6 +300,7 @@ public class MapPathWithSearchbarActivity extends AppCompatActivity implements O
             tvMoreInfo.setVisibility(View.INVISIBLE);
             Toast.makeText(MapPathWithSearchbarActivity.this, "You have cancle the destination", Toast.LENGTH_SHORT).show();
             autocompleteFragment.setText("");
+           // disConnectSocket();
         }
         if (view.getId() == R.id.tvMoreInfo) {
             behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -286,9 +308,79 @@ public class MapPathWithSearchbarActivity extends AppCompatActivity implements O
             txDur.setText(totalDestDur);
             txYourDest.setText(destinationPlace);
         }
+        if (view.getId() == R.id.tvStartTrip){
+            //connectSocket();
+        }
 
     }
 
+   /* private void connectSocket() {
+        socketMarker = mMap.
+                addMarker(new MarkerOptions().position(new LatLng(Constants.latitude, Constants.longitude)).
+                        title("You Are Here!").
+                        icon(BitmapDescriptorFactory.
+                                fromResource(R.drawable.ic_carmarker))
+
+                );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom((new LatLng(Constants.latitude, Constants.longitude)), 16.0f));
+        mSocket.connect();
+        mSocket.on(Api.SocketActionGetKey + Api.SocketDriverID, onNewMessage);
+        Log.e("SocketKey=" , Api.SocketActionGetKey + Api.SocketDriverID);
+    }
+
+    private  Emitter.Listener onNewMessage = new Emitter.Listener(){
+
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    Gson gson = new Gson();
+                    try {
+                        SocketGeoLocation response = gson.fromJson(data.toString(), SocketGeoLocation.class);
+
+
+                            socketMarker.setPosition(new LatLng((response.getGeoLat()), response.getGeoLong()));
+                            socketMarker.setRotation((float) response.getGeoHeading());
+                            //rotateMarker(marker,Float.parseFloat(response.getGeoHeading()));
+                            //mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(response.getGeoLat()), Double.parseDouble(response.getGeoLon()))));
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(response.getGeoLat(), response.getGeoLong()))             // Sets the center of the map to current location
+                                    .zoom(15)// Sets the zoom
+                                    //.bearing(bearingBetweenLocations(previous,current))
+                                    // Sets the orientation of the camera to east
+                                    .bearing((float) response.getGeoHeading())
+                                    .tilt(0)
+                                    // Sets the tilt of the camera to 0 degrees
+                                    .build();
+                            // Creates a CameraPosition from the builder
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                        if (response != null) {
+                        }
+                    } catch (Exception e) {
+                        return;
+                    }
+
+                }
+            });
+        }
+    };
+*/
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+       // disConnectSocket();
+    }
+
+   /* private void disConnectSocket() {
+        socketMarker.remove();
+        addCurrentLatlng();
+        mSocket.disconnect();
+        mSocket.off("new message", onNewMessage);
+    }
+*/
     // for nearby places
     private String getUrl(double latitude, double longitude, String nearbyPlace) {
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
@@ -311,6 +403,7 @@ public class MapPathWithSearchbarActivity extends AppCompatActivity implements O
 
         addCurrentLatlng();
         googleMap.setOnPolylineClickListener(this);
+
     }
 
     @Override
@@ -464,6 +557,7 @@ public class MapPathWithSearchbarActivity extends AppCompatActivity implements O
             try {
                 tvTotalDistance.setVisibility(View.VISIBLE);
                 tvMoreInfo.setVisibility(View.VISIBLE);
+                tvStartTrip.setVisibility(View.VISIBLE);
                 tvTotalDistance.setText(routeDistanceAndDurationModel.getTime() + " (" + routeDistanceAndDurationModel.getDist() + ")");
                 totalDestDur = routeDistanceAndDurationModel.getTime() + " (" + routeDistanceAndDurationModel.getDist() + ")";
 

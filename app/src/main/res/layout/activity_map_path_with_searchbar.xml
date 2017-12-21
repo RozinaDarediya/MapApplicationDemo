@@ -2,10 +2,10 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:id="@+id/coordinatorLayout"
     tools:context="com.theta.mapapplication.map_application.Activities.MapPathWithSearchbarActivity">
 
     <include layout="@layout/content_map_serch" />
@@ -29,51 +29,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+        <TextView
+            android:id="@+id/txDur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:layout_marginLeft="20dp"/>
+        <TextView
+            android:id="@+id/txYourLoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/ic_my_location"
+            android:text="@string/tvYourLoc"
+            android:textStyle="bold" />
+        <View
+            android:id="@+id/line"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="5dp"
+            android:background="#d4d3d3" />
 
-                <TextView
-                    android:id="@+id/txDur"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txYourLoc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:drawableLeft="@drawable/ic_my_location"
-                    android:text="@string/tvYourLoc"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:id="@+id/line"
-                    style="?android:attr/listSeparatorTextViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#d4d3d3" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginTop="16dp" />
-
-                <TextView
-                    android:id="@+id/txYourDest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:drawableLeft="@drawable/ic_location"
-                    android:text="@string/tvYourLoc"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp" />
+        <TextView
+            android:id="@+id/txYourDest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/ic_location"
+            android:text="@string/tvYourLoc"
+            android:textStyle="bold" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

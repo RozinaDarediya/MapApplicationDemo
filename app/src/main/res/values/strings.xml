@@ -17,16 +17,18 @@
     <string name="tvTotalDuration">Duration</string>
     <string name="tvMoreInfo">Route Info</string>
     <string name="tvYourLoc">Your Location</string>
+    <string name="tvStartTrip">Start Trip</string>
+    <string name="btnStartTrip">Start Trip</string>
+    <string name="menusatelliteView">Satellite</string>
+    <string name="menumapView">Normal</string>
+    <string name="menuterrianView">Terrian</string>
+    <string name="menumodeDriving">Driving</string>
+    <string name="menumodeBicycling">Bicycling</string>
+    <string name="menumodeWalking">Walking</string>
 
-     <string name="menusatelliteView">Satellite</string>
-     <string name="menumapView">Normal</string>
-     <string name="menuterrianView">Terrian</string>
-     <string name="menumodeDriving">Driving</string>
-     <string name="menumodeBicycling">Bicycling</string>
-     <string name="menumodeWalking">Walking</string>
-
-     <string name="menuTitleMapView">Map View</string>
-     <string name="menuTitleMode">Mode</string>
+    <string name="menuTitleMapView">Map View</string>
+    <string name="menuTitleMode">Mode</string>
+    <string name="btnStartTripActivity">Start your Trip</string>
 
     <string-array name="place_type">
         <item>airport</item>
